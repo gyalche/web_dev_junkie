@@ -20,8 +20,8 @@ function App() {
     newGrid[rowIndex][colIndex] = value;
     setGrid(newGrid);
   };
-  const solvePuzzle = () => {
-    fetch('http://127.0.0.1:5000', {
+  const solvePuzzle = async () => {
+    const response = fetch('http://127.0.0.1:5000', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -30,6 +30,19 @@ function App() {
         sudoku: [],
       }),
     });
+
+    const json = await response.json();
+    const solution = json.data[0].solution;
+    const newGrid = new Array(9).fill('').map(() => new Array(9).fill(0));
+    debugger;
+
+    for (let i = 0; i < newGrid.length; i++) {
+      for (let j = 0; j < newGrid[i].length; j++) {
+        newGrid[i][j] = parseInt(solution.charAt(i * 9 + j));
+      }
+    }
+
+    setGrid(newGrid);
   };
   return (
     <div className="App">
